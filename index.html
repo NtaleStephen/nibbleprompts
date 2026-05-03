@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nibble Prompts — UI Prompts for Vibe Coders</title>
+    <meta name="description" content="A curated library of layout prompts for vibe coders. Pick a structure, copy the prompt, paste it into your AI tool with a screenshot — get a matching UI.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Nibble <span>Prompts</span>
+            </a>
+            
+            <div class="category-tabs" id="category-tabs">
+                <!-- Categories will be injected here by JS -->
+            </div>
+
+            <nav class="nav-links">
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>UI Prompt Library for Vibe Coders</h1>
+            <p>Pick a structure, copy the prompt, and paste it into your AI tool with a screenshot to match your aesthetic perfectly.</p>
+        </section>
+
+        <div class="search-container">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="Search prompts..." autocomplete="off">
+            <span class="shortcut-hint">/</span>
+        </div>
+
+        <section class="ad-banner">
+            <div class="ad-logo">GLOWUP UI</div>
+            <div class="ad-tagline">Stop shipping ugly UI</div>
+            <p class="ad-desc">Generate UI variants across Claude, GPT-5 & Gemini. Paste the winner straight into your builder. Zero wasted credits.</p>
+            <a href="https://glowupui.io" target="_blank" class="btn-try-glowup">Try GlowUp UI</a>
+            <div class="trust-signal">Trusted by 3,000+ vibe coders</div>
+        </section>
+
+        <div id="prompts-container">
+            <!-- Prompts will be injected here by JS -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Nibble Prompts. A clone inspired by VibeUI.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
