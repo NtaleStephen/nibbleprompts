@@ -3,31 +3,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const promptsContainer = document.getElementById('prompts-container');
   const searchInput = document.getElementById('search-input');
   const themeToggle = document.getElementById('theme-toggle');
-  const sidebar = document.getElementById('sidebar');
-  const toggleSidebarBtn = document.getElementById('toggle-sidebar');
 
   let activeCategory = 'all';
   let searchQuery = '';
 
   // Theme Management
-  const currentTheme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', currentTheme);
+  const moonIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+  const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
 
-  themeToggle.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  });
+  function updateThemeIcon() {
+    if(!themeToggle) return;
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    themeToggle.innerHTML = currentTheme === 'light' ? moonIcon : sunIcon;
+  }
 
-  // Sidebar Toggle (Desktop collapse / Mobile menu)
-  toggleSidebarBtn.addEventListener('click', () => {
-    if (window.innerWidth <= 768) {
-      sidebar.classList.toggle('mobile-open');
-    } else {
-      sidebar.classList.toggle('collapsed');
-    }
-  });
+  updateThemeIcon();
+
+  if(themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon();
+    });
+  }
+
+  if(!categoryTabsContainer) return; // If on about page, stop here.
 
   const CATEGORY_LABELS = {
     all: 'All',
@@ -62,20 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (category !== 'all' && !CATEGORY_COUNTS[category]) return;
 
       const btn = document.createElement('button');
-      btn.className = `cat-btn ${activeCategory === category ? 'active' : ''}`;
+      btn.className = `tab-btn ${activeCategory === category ? 'active' : ''}`;
       
       btn.innerHTML = `
-        <span class="cat-name">${CATEGORY_LABELS[category]}</span>
-        <span class="count-badge">${CATEGORY_COUNTS[category]}</span>
+        ${CATEGORY_LABELS[category]} <span class="count-badge">${CATEGORY_COUNTS[category]}</span>
       `;
       
       btn.addEventListener('click', () => {
         activeCategory = category;
         renderTabs();
         renderPrompts();
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove('mobile-open');
-        }
       });
 
       categoryTabsContainer.appendChild(btn);
@@ -104,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let html = '';
     switch(category) {
       case 'hero':
-        // Hero wireframe variant
         html = `
           <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
             <div class="wf-line" style="width: 40%;"></div>
@@ -168,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         break;
       default:
-        // Generic wireframe
         html = `
           <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:8px; padding:8px;">
             <div class="wf-line" style="width: 30%;"></div>
@@ -202,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const title = document.createElement('h2');
         title.className = 'category-title';
-        title.textContent = CATEGORY_LABELS[cat];
+        title.innerHTML = `${CATEGORY_LABELS[cat]} <span class="category-count">${grouped[cat].length} prompts</span>`;
         section.appendChild(title);
 
         const grid = document.createElement('div');
@@ -237,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Attach event listeners for copy buttons
     document.querySelectorAll('.btn-copy').forEach(btn => {
       btn.addEventListener('click', handleCopy);
     });
@@ -266,24 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Search input handler
-  searchInput.addEventListener('input', (e) => {
-    searchQuery = e.target.value;
-    renderPrompts();
-  });
-
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.shiftKey && document.activeElement !== searchInput) {
-      e.preventDefault();
-      searchInput.focus();
-    }
-    if (e.key === 'Escape' && document.activeElement === searchInput) {
-      searchInput.value = '';
-      searchQuery = '';
-      searchInput.blur();
+  if(searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
       renderPrompts();
-    }
-  });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.shiftKey && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.value = '';
+        searchQuery = '';
+        searchInput.blur();
+        renderPrompts();
+      }
+    });
+  }
 
   // Initial render
   renderTabs();
